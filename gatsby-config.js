@@ -1,8 +1,20 @@
+let activeEnv =
+  process.env.GATSBY_ACTIVE_ENV || process.env.NODE_ENV || "development"
+
+console.log(`Using environment config: '${activeEnv}'`)
+
+require("dotenv").config({
+  path: `.env.${activeEnv}`,
+})
+
+console.log(`This WordPress Endpoint is used: '${process.env.WORDPRESS_URL}'`)
+
+
 module.exports = {
   siteMetadata: {
-    title: `Gatsby Default Starter`,
-    description: `Kick off your next, great Gatsby project with this default starter. This barebones starter ships with the main Gatsby configuration files you might need.`,
-    author: `@gatsbyjs`,
+    title: `WP2Gatsby`,
+    description: `A Gatsby theme for Headless WordPress CMS with WPGraQL`,
+    author: `@AskChandra`,
   },
   plugins: [
     `gatsby-plugin-react-helmet`,
