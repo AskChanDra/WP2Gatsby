@@ -8,7 +8,7 @@ require("dotenv").config({
 })
 
 console.log(`This WordPress Endpoint is used: '${process.env.WORDPRESS_URL}'`)
-
+// TODO: Using Gatsby Plugin Config : https://www.gatsbyjs.com/plugins/gatsby-plugin-config/?=dotenv
 
 module.exports = {
   siteMetadata: {
@@ -43,11 +43,11 @@ module.exports = {
       resolve: "gatsby-source-graphql",
       options: {
         typeName: "WPGraphQL",
-        fieldName: "wpcontent",
+        fieldName: "wpgraphql",
         // GraphQL endpoint, relative to your WordPress home URL.
-        url: "http://wpgraphql.local/graphql",
+        // url: "http://wpgraphql.local/graphql",
         // GraphQL endpoint using env variable
-       // url: "${process.env.WORDPRESS_URL}/graphql",
+        url: `${process.env.WORDPRESS_URL}/graphql`,
       },
     },
     // this (optional) plugin enables Progressive Web App + Offline functionality
