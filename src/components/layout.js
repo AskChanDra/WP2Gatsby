@@ -14,6 +14,8 @@ import "./layout.css"
 import Menu from "./Menu"
 import Footer from "./Footer"
 
+import "@wordpress/block-library/build-style/style.css"
+
 const Layout = ({ children }) => {
   const data = useStaticQuery(graphql`
     query SiteTitleQuery {
