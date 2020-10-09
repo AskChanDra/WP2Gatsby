@@ -136,9 +136,8 @@ module.exports = async ({ actions, graphql, reporter }, options ) => {
         context: {
             page: page,
         },
-        })
-
-        reporter.info(`# -----> PAGES TOTAL: ${allPages.length}`)
+        })  
       })
+      reporter.info(`# -----> PAGES TOTAL: ${allPages.length}`)
   })
 }
