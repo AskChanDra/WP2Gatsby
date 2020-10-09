@@ -1,16 +1,15 @@
 // src/components/MenuItem.js
 import React from 'react'
-import { CreateLocalLink } from "../helper"
-import { Link } from 'gatsby'
+import { CreateLocalLink, UniveralLink } from "../helper"
 
 const MenuItem = ({ menuItem, wordPressUrl }) => {
     return (
-        <Link 
+        <UniveralLink 
         style={{marginRight: '20px' }}
         to={CreateLocalLink(menuItem, wordPressUrl)}>
         {menuItem.label}
-        </Link>
+        </UniveralLink>
     )
 }
 
-export default MenuItem
+export default MenuItem 
