@@ -1,6 +1,15 @@
-const pageTemplate = require.resolve(`../src/templates/pages/index.js`)
+const {
+  PostTemplateFragment,
+  BlogPreviewFragment,
+} = require('../src/templates/posts/data.js')
+
+const postTemplate = require.resolve(`../src/templates/posts/index.js`)
+const blogTemplate = require.resolve(`../src/templates/posts/blog.js`)
 
 const GET_POSTS = `
+  # Make use of the imported fragments
+  ${PostTemplateFragment}
+  ${BlogPreviewFragment}
   # Define our query variables
   query GET_POSTS($first:Int $after:String) {
     wpgraphql {
@@ -25,10 +34,12 @@ const GET_POSTS = `
           } 
           nodes {
               uri
-              id
-              postId
-              title
-              content    
+              
+              #This is the fragment used for the Post Template
+              ...PostTemplateFragment
+
+              # This is the fragment used for the Blog Preview Template or Archive Pages
+              ...BlogPreviewFragment
           }
       }
     }
@@ -36,16 +47,18 @@ const GET_POSTS = `
 `
 
 /**
- * Array to store allpagess. We make paginated requests
- * to WordPress to get allpagess, and once we have all pages,
+ * Array to store allPostss. We make paginated requests
+ * to WordPress to get allPostss, and once we have all pages,
  * then we iterate over them to create pages.
  *
  * @type {Array}
  */
-const allPages = []
+const allPosts = []
+
+const blogPages = []
 
 /**
- * We track the page number so we can output the page number to the console.
+ * We track the post number so we can output the post number to the console.
  *
  * @type {number}
  */
@@ -92,15 +105,46 @@ module.exports = async ({ actions, graphql, reporter }, options ) => {
       } = data
 
       /**
+       * Define the path for the paginated blog page.
+       * This is the url the page will live at
+       * @type { string }
+       */
+      const blogPagePath = !variables.after
+      ? `blog/`
+      : `blog/page/${pageNumber + 1}`
+
+      /**
+       * Add config for the blogPage to the blog Page array
+       * for creating later
+       * 
+       * @type {{
+       * path: string,
+       * component: string,
+       * context: {nodes:*, pageNumber: number, hasNextPage: *}
+       * }}
+       */
+      blogPages[pageNumber] = {
+        path: blogPagePath,
+        component: blogTemplate,
+        context: {
+          nodes,
+          pageNumber: pageNumber + 1,
+          hasNextPage,
+          itemsPerPage,
+          allPosts,
+        },
+      }
+
+      /**
        * Map over the pages for later creation
        */
       nodes &&
-        nodes.map(pages => {
-          allPages.push(pages)
+        nodes.map(posts => {
+          allPosts.push(posts)
         })
 
       /**
-       * If there's another page, fetch more
+       * If there's another post, fetch more
        * so we can have all the data we need.
        */
       if (hasNextPage) {
@@ -114,7 +158,7 @@ module.exports = async ({ actions, graphql, reporter }, options ) => {
        * so we can create the necessary pages with
        * all the data on hand.
        */
-      return allPages
+      return allPosts
     })
   }
 
@@ -122,22 +166,36 @@ module.exports = async ({ actions, graphql, reporter }, options ) => {
    * Kick off our `fetchPages` method which will get us all
    * the pages we need to create individual pages.
    */
-  await fetchPages({ first: itemsPerPage, after: null }).then(allPages => {
+  await fetchPages({ first: itemsPerPage, after: null }).then(allPosts => {
     /**
-     * Map over the allPages array to create the
+     * Map over the allPosts array to create the
      * single pages
      */
-    allPages &&
-      allPages.map(page => {
-        console.log(`create pages: ${page.uri}`)
+    allPosts &&
+      allPosts.map(post => {
+        console.log(`create posts: ${post.uri}`)
         createPage({
-        path: `${page.uri}`,
-        component: pageTemplate,
+        path: `${post.uri}`,
+        component: postTemplate,
         context: {
-            page: page,
+            post: post,
         },
         })
       })
-      reporter.info(`# -----> POSTS TOTAL: ${allPages.length}`)
+      reporter.info(`# -----> POSTS TOTAL: ${allPosts.length}`)
+
+      /**
+       * Map over the `blogPages` array to crat the paginated blog pages
+       */
+      blogPages &&
+        blogPages.map((blogPage) => {
+          if(blogPage.context.pageNumber === 1 ) {
+            blogPage.context.publisher = true
+            blogPage.context.label = blogPage.path.replace('/', '')
+          }
+          createPage(blogPage)
+          reporter.info(`created blog arhive page ${blogPage.context.pageNumber}`)
+
+        })
   })
 }

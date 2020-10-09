@@ -1,6 +1,6 @@
 import React from "react"
 import { useStaticQuery, graphql } from "gatsby"
-import Img from "gatsby-image"
+//import Img from "gatsby-image"
 
 /*
  * This component is built using `gatsby-image` to automatically serve optimized
@@ -13,24 +13,46 @@ import Img from "gatsby-image"
  * - `useStaticQuery`: https://www.gatsbyjs.com/docs/use-static-query/
  */
 
-const Image = () => {
+// const Image = () => {
+//   const data = useStaticQuery(graphql`
+//     query {
+//       placeholderImage: file(relativePath: { eq: "gatsby-astronaut.png" }) {
+//         childImageSharp {
+//           fluid(maxWidth: 300) {
+//             ...GatsbyImageSharpFluid
+//           }
+//         }
+//       }
+//     }
+//   `)
+
+//   if (!data?.placeholderImage?.childImageSharp?.fluid) {
+//     return <div>Picture not found</div>
+//   }
+
+//   return <Img fluid={data.placeholderImage.childImageSharp.fluid} />
+// }
+
+// export default Image
+
+const Image = ({ image, withFallback = false, ...props }) => {
+  console.log(image)
   const data = useStaticQuery(graphql`
     query {
-      placeholderImage: file(relativePath: { eq: "gatsby-astronaut.png" }) {
-        childImageSharp {
-          fluid(maxWidth: 300) {
-            ...GatsbyImageSharpFluid
-          }
-        }
+      fallBackImage: file(relativePath: { eq: "fallback.svg" }) {
+          publicURL
       }
     }
   `)
 
-  if (!data?.placeholderImage?.childImageSharp?.fluid) {
-    return <div>Picture not found</div>
+  /**
+   * Return fallback Image, if no Imag is given.
+   */
+  if(!image) {
+    return withFallback ? <img src={data.fallBackImage.publicURL} alt={"Fallback"} {...props} /> : null
   }
 
-  return <Img fluid={data.placeholderImage.childImageSharp.fluid} />
+  return <img src={image.node.sourceUrl} alt={image.altText} {...props} />
 }
 
 export default Image

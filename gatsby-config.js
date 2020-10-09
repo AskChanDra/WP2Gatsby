@@ -36,6 +36,7 @@ module.exports = {
         // url: "http://wpgraphql.local/graphql",
         // GraphQL endpoint using env variable
         url: `${process.env.WORDPRESS_URL}/graphql`,
+        refetchInterval: 900,
       },
     },
     // this (optional) plugin enables Progressive Web App + Offline functionality
