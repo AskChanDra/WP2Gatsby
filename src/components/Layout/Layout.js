@@ -22,8 +22,8 @@ const Layout = ({ children }) => {
   //     }
   //   }
   // `)
-  const { title } = useSiteMetadata
-
+  const { title } = useSiteMetadata()
+//console.log(`title` + title)
   return (
     <>
       <Header siteTitle={title} />

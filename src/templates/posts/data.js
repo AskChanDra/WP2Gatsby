@@ -32,6 +32,9 @@ const PostTemplateFragment = `
             {
                 name
                 slug
+                avatar(size:50){
+                    url
+                }
             }
         }                
     }
@@ -52,10 +55,27 @@ const BlogPreviewFragment = `
                 sourceUrl
             }
         }
+        categories {
+            nodes {
+                name
+                slug
+                id  
+            }
+        }
+        tags {
+            nodes {
+                slug
+                name
+                id 
+            }
+        }
         author {
             node {
                 name
                 slug
+                avatar(size:50){
+                    url
+                }
             }
         }
     }
