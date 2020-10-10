@@ -9,10 +9,12 @@ import React from "react"
 import PropTypes from "prop-types"
 import { useStaticQuery, graphql } from "gatsby"
 
-import Header from "./header"
-import "./layout.css"
-import Menu from "./Menu"
-import Footer from "./Footer"
+import Header from "../header"
+import "../layout.css"
+import Menu from "../Menu"
+import Footer from "../Footer"
+
+import styles from './Layout.module.scss'
 
 import "@wordpress/block-library/build-style/style.css"
 
@@ -31,11 +33,7 @@ const Layout = ({ children }) => {
     <>
       <Header siteTitle={data.site.siteMetadata?.title || `Title`} />
       <div
-        style={{
-          margin: `0 auto`,
-          maxWidth: 960,
-          padding: `0 1.0875rem 1.45rem`,
-        }}
+        className={styles.layout}
       >
         <Menu />
         <main>{children}</main>

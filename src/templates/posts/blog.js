@@ -1,6 +1,6 @@
 // src/templates/posts/blog.js
 import React from 'react'
-import Layout from '../../components/layout'
+import Layout from '../../components/Layout'
 import Pagination from '../../components/Pagination'
 import PostEntry from '../../components/PostEntry'
 import SEO from '../../components/seo'
