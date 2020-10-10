@@ -1,4 +1,4 @@
-const { BlogPreviewFragment } = require('../src/templates/posts/data.js')
+  const { BlogPreviewFragment } = require('../src/templates/posts/data.js')
   
   const userTemplate = require.resolve(`../src/templates/users/archive.js`)
   
@@ -142,7 +142,7 @@ const { BlogPreviewFragment } = require('../src/templates/posts/data.js')
         allUsers.map(user => {
           console.log(`create posts: ${user.slug}`)
           createPage({
-          path: `blog/author/${user.slug}`,
+          path: `author/${user.slug}`,
           component: userTemplate,
           context: user,
           })

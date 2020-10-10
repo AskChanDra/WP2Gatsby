@@ -36,7 +36,6 @@ import { useStaticQuery, graphql } from "gatsby"
 // export default Image
 
 const Image = ({ image, withFallback = false, ...props }) => {
-  console.log(image)
   const data = useStaticQuery(graphql`
     query {
       fallBackImage: file(relativePath: { eq: "fallback.svg" }) {
