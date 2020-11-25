@@ -1,4 +1,5 @@
 const pageTemplate = require.resolve(`../src/templates/pages/index.js`)
+const contactTemplate = require.resolve(`../src/templates/contact/contact.js`)
 
 const GET_PAGES = `
   # Define our query variables
@@ -27,6 +28,7 @@ const GET_PAGES = `
               uri
               id
               pageId
+              slug
               title
               content    
           }
@@ -130,13 +132,23 @@ module.exports = async ({ actions, graphql, reporter }, options ) => {
     allPages &&
       allPages.map(page => {
         console.log(`create pages: ${page.uri}`)
-        createPage({
-        path: `${page.uri}`,
-        component: pageTemplate,
-        context: {
-            page: page,
-        },
-        })  
+        if(page.slug === 'contact') {
+          createPage({
+            path: `${page.uri}`,
+            component: contactTemplate,
+            context: {
+                page: page,
+            },
+          }) 
+        } else {
+          createPage({
+            path: `${page.uri}`,
+            component: pageTemplate,
+            context: {
+                page: page,
+            },
+          }) 
+        } 
       })
       reporter.info(`# -----> PAGES TOTAL: ${allPages.length}`)
   })
